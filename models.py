@@ -41,6 +41,27 @@ class Venue(db.Model):
     seeking_description = db.Column(db.String(120))
     shows = db.relationship('Show', backref='show_venue', lazy=True, cascade='all, delete-orphan')
 
+    @property
+    def get_upcoming_shows(self):
+        """
+        List of upcoming shows for provided artist.
+
+        :return:
+        """
+        return show_serializer(Show.query.filter(
+            Show.venue_id == self.id, Show.start_time > datetime.now()).all())
+
+    @property
+    def get_past_shows(self):
+        """
+        List of past shows for provided artist.
+
+        :param self:
+        :return:
+        """
+        return show_serializer(Show.query.filter(
+            Show.venue_id == self.id, Show.start_time < datetime.now()).all())
+
     def __repr__(self):
         """
         Return string representation for Venue model.
@@ -75,8 +96,7 @@ class Artist(db.Model):
         :return:
         """
         return show_serializer(Show.query.filter(
-            Show.artist_id == self.id, Show.start_time > datetime.now()
-            ).all())
+            Show.artist_id == self.id, Show.start_time > datetime.now()).all())
 
     @property
     def get_past_shows(self):
@@ -87,8 +107,7 @@ class Artist(db.Model):
         :return:
         """
         return show_serializer(Show.query.filter(
-            Show.artist_id == self.id, Show.start_time < datetime.now()
-            ).all())
+            Show.artist_id == self.id, Show.start_time < datetime.now()).all())
 
     def __repr__(self):
         """

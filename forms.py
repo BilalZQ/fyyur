@@ -5,10 +5,12 @@ from wtforms.validators import DataRequired, AnyOf, URL
 
 from constants import GENRES, STATES
 
+
 class ShowForm(Form):
     artist_id = StringField('artist_id')
     venue_id = StringField('venue_id')
     start_time = DateTimeField('start_time', validators=[DataRequired()], default= datetime.today())
+
 
 class VenueForm(Form):
     name = StringField('name', validators=[DataRequired()])
@@ -24,7 +26,6 @@ class VenueForm(Form):
     seeking_description = StringField(
         'seeking_description'
     )
-
 
 
 class ArtistForm(Form):
