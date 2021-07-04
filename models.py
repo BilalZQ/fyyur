@@ -1,4 +1,5 @@
 """Module for app models."""
+from datetime import datetime
 
 from flask import Flask
 from flask_moment import Moment
@@ -35,8 +36,7 @@ class Venue(db.Model):
     website_link = db.Column(db.String(120), nullable=False)
     seeking_talent = db.Column(db.Boolean, default=True)
     seeking_description = db.Column(db.String(120))
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+    shows = db.relationship('Show', backref='show_venue', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         """
@@ -61,6 +61,8 @@ class Artist(db.Model):
     website_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(120), nullable=False)
+    shows = db.relationship('Show', backref='show_artist', lazy=True, cascade='all, delete-orphan')
+
 
     def __repr__(self):
         """
@@ -70,6 +72,19 @@ class Artist(db.Model):
         """
         return f'Artist Id: {self.name}[{self.id}]'
 
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+class Show(db.Model):
+    """Show Model."""
+    __tablename__ = 'show'
 
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
+    venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'))
+    start_time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        """
+        Return string representation for show model.
+
+        :return:
+        """
+        return f'<Show: {self.id}, Artist: {self.artist_id}, Venue: {self.venue_id}>'
