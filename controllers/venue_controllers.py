@@ -74,6 +74,7 @@ def create_venue_submission():
       :return:
       """
       form = VenueForm()
+      err = False
       try:
         venue = Venue(
           name = form.name.data,
@@ -92,10 +93,11 @@ def create_venue_submission():
         db.session.commit()
         flash(f'Venue {venue.name} was successfully listed!')
       except:
+        err = True
         db.session.rollback()
         flash('An error occurred. Venue ' + form.name.data + ' could not be listed.')
 
-      return redirect(url_for('venues'))
+      return render_template('pages/home.html') if err else redirect(url_for('venues'))
 
 
 @app.route('/venues/<venue_id>/delete', methods=['GET'])
@@ -163,4 +165,3 @@ def edit_venue_submission(venue_id):
         db.session.close()
 
       return redirect(url_for('show_venue', venue_id=venue_id))
-    

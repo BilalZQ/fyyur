@@ -121,6 +121,7 @@ def create_artist_submission():
     :return:
     """
     form = ArtistForm()
+    err = False
 
     try:
         artist = Artist(
@@ -138,14 +139,14 @@ def create_artist_submission():
         db.session.add(artist)
         db.session.commit()
         flash('Artist ' + request.form['name'] + ' was successfully listed!')
-    except Exception as err:
-        print(err)
-        db.session.roll()
+    except:
+        err = True
+        db.session.rollback()
         flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed.')
     finally:
         db.session.close()
 
-    return redirect(url_for('artists'))
+    return render_template('pages/home.html') if err else redirect(url_for('artists'))
 
 #  Delete
 #  ----------------------------------------------------------------
