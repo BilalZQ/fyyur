@@ -6,6 +6,8 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
+from serializers import show_serializer
+
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -22,6 +24,7 @@ migrate = Migrate(app, db)
 
 class Venue(db.Model):
     """Venue Model."""
+
     __tablename__ = 'venue'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -48,6 +51,7 @@ class Venue(db.Model):
 
 class Artist(db.Model):
     """Artist model."""
+
     __tablename__ = 'artist'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -63,6 +67,28 @@ class Artist(db.Model):
     seeking_description = db.Column(db.String(120), nullable=False)
     shows = db.relationship('Show', backref='show_artist', lazy=True, cascade='all, delete-orphan')
 
+    @property
+    def get_upcoming_shows(self):
+        """
+        List of upcoming shows for provided artist.
+
+        :return:
+        """
+        return show_serializer(Show.query.filter(
+            Show.artist_id == self.id, Show.start_time > datetime.now()
+            ).all())
+
+    @property
+    def get_past_shows(self):
+        """
+        List of past shows for provided artist.
+
+        :param self:
+        :return:
+        """
+        return show_serializer(Show.query.filter(
+            Show.artist_id == self.id, Show.start_time < datetime.now()
+            ).all())
 
     def __repr__(self):
         """
@@ -72,8 +98,10 @@ class Artist(db.Model):
         """
         return f'Artist Id: {self.name}[{self.id}]'
 
+
 class Show(db.Model):
     """Show Model."""
+
     __tablename__ = 'show'
 
     id = db.Column(db.Integer, primary_key=True)
