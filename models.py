@@ -103,7 +103,8 @@ class Artist(db.Model):
         :return:
         """
         queryset = self.query.join(Show).filter(
-            Show.artist_id == self.id, Show.start_time > datetime.now()).first()
+            Show.artist_id == self.id, Show.start_time > datetime.now()
+            ).first()
         return show_serializer(queryset.shows) if queryset else []
 
     @property
@@ -115,7 +116,8 @@ class Artist(db.Model):
         :return:
         """
         queryset = self.query.join(Show).filter(
-            Show.artist_id == self.id, Show.start_time < datetime.now()).first()
+            Show.artist_id == self.id, Show.start_time < datetime.now()
+            ).first()
         return show_serializer(queryset.shows) if queryset else []
 
     def __repr__(self):
@@ -143,4 +145,5 @@ class Show(db.Model):
 
         :return:
         """
-        return f'< Show: {self.id}, Artist: {self.artist_id}, Venue: {self.venue_id} >'
+        return f'< Show: {self.id}, Artist: {self.artist_id},'\
+            ' Venue: {self.venue_id} >'
