@@ -8,6 +8,7 @@ DEBUG = True
 
 # Connect to the database
 
-# Default connection string = 'postgresql://postgres:postgres@localhost:5432/fyyur'
+# Default connection string:
+# 'postgresql://postgres:postgres@localhost:5432/fyyur'
 SQLALCHEMY_DATABASE_URI = 'postgresql:///fyyur'
 SQLALCHEMY_TRACK_MODIFICATIONS = False

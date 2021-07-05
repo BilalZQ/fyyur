@@ -3,6 +3,7 @@ from forms import ArtistForm
 
 from serializers import artist_serializer
 
+
 @app.route('/artists')
 def artists():
     """"
@@ -31,22 +32,24 @@ def search_artists():
             'id': artist.id,
             'name': artist.name,
             'num_upcoming_shows': len(artist.get_upcoming_shows)
-            } for artist in artists]
-        }
+        } for artist in artists]
+    }
 
-    return render_template('pages/search_artists.html', results=response, search_term=search_term)
+    return render_template(
+        'pages/search_artists.html', results=response, search_term=search_term)
 
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
-  """
-  Return artist based on provided artist_id.
+    """
+    Return artist based on provided artist_id.
 
-  :param artist_id:
-  :return:
-  """
-  return render_template('pages/show_artist.html', artist=artist_serializer(
-      Artist.query.get(artist_id), False))
+    :param artist_id:
+    :return:
+    """
+    return render_template(
+        'pages/show_artist.html', artist=artist_serializer(
+            Artist.query.get(artist_id), False))
 
 
 #  Update
@@ -61,7 +64,8 @@ def edit_artist(artist_id):
     artist = Artist.query.get(artist_id)
     serialized_artist = artist_serializer(artist, False)
     form = ArtistForm(obj=artist)
-    return render_template('forms/edit_artist.html', form=form, artist=serialized_artist)
+    return render_template(
+        'forms/edit_artist.html', form=form, artist=serialized_artist)
 
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
@@ -125,31 +129,34 @@ def create_artist_submission():
 
     try:
         artist = Artist(
-            name = form.name.data,
-            city = form.city.data,
-            state = form.state.data,
-            phone = form.phone.data,
-            image_link = form.image_link.data,
-            genres = form.genres.data,
-            facebook_link = form.facebook_link.data,
-            website_link = form.website_link.data,
-            seeking_venue = form.seeking_venue.data,
-            seeking_description = form.seeking_description.data
+            name=form.name.data,
+            city=form.city.data,
+            state=form.state.data,
+            phone=form.phone.data,
+            image_link=form.image_link.data,
+            genres=form.genres.data,
+            facebook_link=form.facebook_link.data,
+            website_link=form.website_link.data,
+            seeking_venue=form.seeking_venue.data,
+            seeking_description=form.seeking_description.data
         )
         db.session.add(artist)
         db.session.commit()
         flash('Artist ' + request.form['name'] + ' was successfully listed!')
-    except:
+    except Exception:
         err = True
         db.session.rollback()
-        flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed.')
+        flash('An error occurred. Artist ' +
+              request.form['name'] + ' could not be listed.')
     finally:
         db.session.close()
 
-    return render_template('pages/home.html') if err else redirect(url_for('artists'))
+    return render_template('pages/home.html') if err else redirect(
+        url_for('artists'))
 
 #  Delete
 #  ----------------------------------------------------------------
+
 
 @app.route('/artists/<int:artist_id>/delete', methods=['GET'])
 def delete_artist(artist_id):
@@ -164,7 +171,7 @@ def delete_artist(artist_id):
         db.session.delete(artist)
         db.session.commit()
         flash(f'Artist {artist.name} was successfully deleted!')
-    except:
+    except Exception:
         db.session.rollback()
         flash('An error occured while trying to delete artist!')
     finally:

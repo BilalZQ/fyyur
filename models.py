@@ -8,9 +8,9 @@ from flask_migrate import Migrate
 
 from serializers import show_serializer
 
-#----------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # App Config.
-#----------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 app = Flask(__name__)
 moment = Moment(app)
@@ -18,9 +18,10 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-#----------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Models.
-#----------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Venue(db.Model):
     """Venue Model."""
@@ -39,7 +40,8 @@ class Venue(db.Model):
     website_link = db.Column(db.String(120), nullable=False)
     seeking_talent = db.Column(db.Boolean, default=True)
     seeking_description = db.Column(db.String(120))
-    shows = db.relationship('Show', backref='show_venue', lazy=True, cascade='all, delete-orphan')
+    shows = db.relationship('Show', backref='show_venue',
+                            lazy=True, cascade='all, delete-orphan')
 
     @property
     def get_upcoming_shows(self):
@@ -70,6 +72,7 @@ class Venue(db.Model):
         """
         return f'Venue: {self.name}[{self.id}]'
 
+
 class Artist(db.Model):
     """Artist model."""
 
@@ -86,7 +89,8 @@ class Artist(db.Model):
     website_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(120), nullable=False)
-    shows = db.relationship('Show', backref='show_artist', lazy=True, cascade='all, delete-orphan')
+    shows = db.relationship('Show', backref='show_artist',
+                            lazy=True, cascade='all, delete-orphan')
 
     @property
     def get_upcoming_shows(self):
@@ -134,4 +138,4 @@ class Show(db.Model):
 
         :return:
         """
-        return f'<Show: {self.id}, Artist: {self.artist_id}, Venue: {self.venue_id}>'
+        return f'< Show: {self.id}, Artist: {self.artist_id}, Venue: {self.venue_id} >'

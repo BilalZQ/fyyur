@@ -1,5 +1,7 @@
 """Module for serializers."""
-from utils import get_serialized_show, get_serialized_artist, get_serialized_venue
+from utils import (
+    get_serialized_show, get_serialized_artist, get_serialized_venue
+)
 
 
 def show_serializer(shows, multiple=True):
