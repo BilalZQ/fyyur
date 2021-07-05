@@ -1,5 +1,6 @@
 """Module for app models."""
 from datetime import datetime
+import pdb
 
 from flask import Flask
 from flask_moment import Moment
@@ -50,8 +51,9 @@ class Venue(db.Model):
 
         :return:
         """
-        return show_serializer(Show.query.filter(
-            Show.venue_id == self.id, Show.start_time > datetime.now()).all())
+        queryset = self.query.join(Show).filter(
+            Show.venue_id == self.id, Show.start_time > datetime.now()).first()
+        return show_serializer(queryset.shows) if queryset else []
 
     @property
     def get_past_shows(self):
@@ -61,8 +63,9 @@ class Venue(db.Model):
         :param self:
         :return:
         """
-        return show_serializer(Show.query.filter(
-            Show.venue_id == self.id, Show.start_time < datetime.now()).all())
+        queryset = self.query.join(Show).filter(
+            Show.venue_id == self.id, Show.start_time < datetime.now()).first()
+        return show_serializer(queryset.shows) if queryset else []
 
     def __repr__(self):
         """
@@ -99,8 +102,9 @@ class Artist(db.Model):
 
         :return:
         """
-        return show_serializer(Show.query.filter(
-            Show.artist_id == self.id, Show.start_time > datetime.now()).all())
+        queryset = self.query.join(Show).filter(
+            Show.artist_id == self.id, Show.start_time > datetime.now()).first()
+        return show_serializer(queryset.shows) if queryset else []
 
     @property
     def get_past_shows(self):
@@ -110,8 +114,9 @@ class Artist(db.Model):
         :param self:
         :return:
         """
-        return show_serializer(Show.query.filter(
-            Show.artist_id == self.id, Show.start_time < datetime.now()).all())
+        queryset = self.query.join(Show).filter(
+            Show.artist_id == self.id, Show.start_time < datetime.now()).first()
+        return show_serializer(queryset.shows) if queryset else []
 
     def __repr__(self):
         """
